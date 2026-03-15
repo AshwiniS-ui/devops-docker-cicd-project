@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ashwinisdocker/cicd-app:${{ github.sha }}
+            docker pull ashwinisdocker/cicd-app:sudo docker pull ashwinisdocker/cicd-app:latest
             docker stop cicd-container || true
             docker rm cicd-container || true
-            docker run -d -p 5000:5000 --name cicd-container ashwinisdocker/cicd-app:${{ github.sha }}
+            docker run -d -p 5000:5000 --name cicd-container ashwinisdocker/cicd-app:latest
