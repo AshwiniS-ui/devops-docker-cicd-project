@@ -20,10 +20,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build -t ashwinisdocker/cicd-app .
+        run: docker build -t ashwinisdocker/cicd-app:${{ github.sha }} .
 
       - name: Push Docker Image
-        run: docker push ashwinisdocker/cicd-app
+        run: docker push ashwinisdocker/cicd-app:${{ github.sha }}
 
   deploy:
     needs: build-and-push
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull ashwinisdocker/cicd-app:latest
+            docker pull ashwinisdocker/cicd-app:${{ github.sha }}
             docker stop cicd-container || true
             docker rm cicd-container || true
-            docker run -d -p 5000:5000 --name cicd-container ashwinisdocker/cicd-app:latest
+            docker run -d -p 5000:5000 --name cicd-container ashwinisdocker/cicd-app:${{ github.sha }}
